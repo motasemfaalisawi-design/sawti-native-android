@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">صوتي - مترجم فوري نيتيف</string>
+    <string name="listening_active">الميكروفون يستمع الآن...</string>
+    <string name="listening_idle">اضغط لبدء التحدث والترجمة الفورية</string>
+    <string name="source_lang_ar">العربية</string>
+    <string name="target_lang_en">الإنجليزية</string>
+</resources>
