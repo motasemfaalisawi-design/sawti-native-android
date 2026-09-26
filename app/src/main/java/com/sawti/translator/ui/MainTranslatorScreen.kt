@@ -1,9 +1,7 @@
 package com.sawti.translator.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.launch
 
 data class TranslationHistoryItem(
     val id: Long = System.currentTimeMillis(),
@@ -44,15 +41,13 @@ fun MainTranslatorScreen(
     rmsDb: Float,
     sourceLang: String,
     targetLang: String,
-    onToggleListening: () => Unit,
-    onSwapLanguages: () => Unit,
+    onToggleListening: () -> Unit,
+    onSwapLanguages: () -> Unit,
     onSpeak: (String) -> Unit
 ) {
     val clipboardManager = LocalClipboardManager.current
     var history by remember { mutableStateOf(listOf<TranslationHistoryItem>()) }
-    var copiedNotice by remember { mutableStateOf(false) }
 
-    // Update history when translation completes
     LaunchedEffect(translatedText) {
         if (translatedText.isNotBlank() && spokenText.isNotBlank()) {
             val exists = history.any { it.original == spokenText && it.translated == translatedText }
@@ -68,7 +63,6 @@ fun MainTranslatorScreen(
         }
     }
 
-    // Pulse animation for mic
     val infiniteTransition = rememberInfiniteTransition(label = "pulse")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
@@ -108,7 +102,6 @@ fun MainTranslatorScreen(
                     }
                 },
                 actions = {
-                    // Language Switcher Button
                     Button(
                         onClick = onSwapLanguages,
                         colors = ButtonDefaults.buttonColors(
@@ -153,7 +146,6 @@ fun MainTranslatorScreen(
         ) {
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Main Active Translation Card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -170,7 +162,6 @@ fun MainTranslatorScreen(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    // Original Speech Section
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -215,7 +206,6 @@ fun MainTranslatorScreen(
 
                     HorizontalDivider(color = Color(0xFF334155), thickness = 1.dp, modifier = Modifier.padding(vertical = 12.dp))
 
-                    // Translated Result Section
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -229,7 +219,6 @@ fun MainTranslatorScreen(
                                 fontWeight = FontWeight.Bold
                             )
 
-                            // Actions (Speak & Copy)
                             if (translatedText.isNotBlank()) {
                                 Row {
                                     IconButton(
@@ -246,7 +235,6 @@ fun MainTranslatorScreen(
                                     IconButton(
                                         onClick = {
                                             clipboardManager.setText(AnnotatedString(translatedText))
-                                            copiedNotice = true
                                         },
                                         modifier = Modifier.size(32.dp)
                                     ) {
@@ -277,14 +265,12 @@ fun MainTranslatorScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Massive Hero Mic Button
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(96.dp)
                     .clickable { onToggleListening() }
             ) {
-                // Pulse background ring when listening
                 if (isListening) {
                     Box(
                         modifier = Modifier
@@ -302,7 +288,6 @@ fun MainTranslatorScreen(
                     )
                 }
 
-                // Inner Main Button
                 Surface(
                     shape = CircleShape,
                     color = if (isListening) Color(0xFFEF4444) else Color(0xFF2563EB),
@@ -328,7 +313,6 @@ fun MainTranslatorScreen(
                 modifier = Modifier.padding(top = 8.dp, bottom = 16.dp)
             )
 
-            // History Section
             if (history.isNotEmpty()) {
                 Text(
                     text = "سجل الترجمة اللحظي",
